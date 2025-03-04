@@ -717,6 +717,11 @@ footer {
         left: 21px;
         right: auto;
     }
+
+    .skills-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
 }
 
 @media screen and (max-width: 768px) {
@@ -737,6 +742,7 @@ footer {
         transform: translateX(100%);
         transition: transform 0.5s ease-in;
         box-shadow: -5px 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
     }
     
     .nav-links li {
@@ -770,6 +776,121 @@ footer {
     
     .projects-grid {
         grid-template-columns: 1fr;
+    }
+
+    .skills-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tabs-header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .tab-btn {
+        margin-bottom: 0.5rem;
+        width: 100%;
+        text-align: center;
+    }
+
+    .hero-about {
+        padding: 1.5rem;
+    }
+
+    .hero-skills {
+        justify-content: center;
+    }
+
+    .timeline-content {
+        padding: 1rem;
+    }
+
+    .timeline-achievements li {
+        font-size: 0.9rem;
+    }
+}
+
+/* Additional media query for smaller mobile devices */
+@media screen and (max-width: 480px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero-tagline {
+        justify-content: center;
+    }
+
+    .tag {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.8rem;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-buttons .btn {
+        margin: 0.5rem 0;
+        width: 100%;
+        text-align: center;
+    }
+
+    .section-header h2 {
+        font-size: 1.8rem;
+    }
+
+    .project-card {
+        padding: 1rem;
+    }
+    
+    .project-image {
+        height: 180px;
+    }
+    
+    .project-image img,
+    .project-placeholder {
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .project-tech {
+        flex-wrap: wrap;
+    }
+
+    .project-tech span {
+        margin-bottom: 0.5rem;
+    }
+
+    .project-links {
+        flex-direction: column;
+    }
+
+    .project-links .btn {
+        margin: 0.5rem 0;
+        width: 100%;
+    }
+
+    .contact-social {
+        flex-direction: column;
+    }
+
+    .social-btn {
+        margin: 0.5rem 0;
+        width: 100%;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-social {
+        margin-top: 1rem;
+    }
+
+    .nav-links {
+        width: 70%;
     }
 }
 
