@@ -1,119 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize particles.js
-    if(typeof particlesJS !== 'undefined') {
-        particlesJS('particles-js', {
-            "particles": {
-                "number": {
-                    "value": 80,
-                    "density": {
-                        "enable": true,
-                        "value_area": 800
-                    }
-                },
-                "color": {
-                    "value": "#4a6cf7"
-                },
-                "shape": {
-                    "type": "circle",
-                    "stroke": {
-                        "width": 0,
-                        "color": "#000000"
-                    },
-                    "polygon": {
-                        "nb_sides": 5
-                    }
-                },
-                "opacity": {
-                    "value": 0.5,
-                    "random": false,
-                    "anim": {
-                        "enable": false,
-                        "speed": 1,
-                        "opacity_min": 0.1,
-                        "sync": false
-                    }
-                },
-                "size": {
-                    "value": 3,
-                    "random": true,
-                    "anim": {
-                        "enable": false,
-                        "speed": 40,
-                        "size_min": 0.1,
-                        "sync": false
-                    }
-                },
-                "line_linked": {
-                    "enable": true,
-                    "distance": 150,
-                    "color": "#4a6cf7",
-                    "opacity": 0.4,
-                    "width": 1
-                },
-                "move": {
-                    "enable": true,
-                    "speed": 2,
-                    "direction": "none",
-                    "random": false,
-                    "straight": false,
-                    "out_mode": "out",
-                    "bounce": false,
-                    "attract": {
-                        "enable": false,
-                        "rotateX": 600,
-                        "rotateY": 1200
-                    }
-                }
-            },
-            "interactivity": {
-                "detect_on": "canvas",
-                "events": {
-                    "onhover": {
-                        "enable": true,
-                        "mode": "grab"
-                    },
-                    "onclick": {
-                        "enable": true,
-                        "mode": "push"
-                    },
-                    "resize": true
-                },
-                "modes": {
-                    "grab": {
-                        "distance": 140,
-                        "line_linked": {
-                            "opacity": 1
-                        }
-                    },
-                    "bubble": {
-                        "distance": 400,
-                        "size": 40,
-                        "duration": 2,
-                        "opacity": 8,
-                        "speed": 3
-                    },
-                    "repulse": {
-                        "distance": 200,
-                        "duration": 0.4
-                    },
-                    "push": {
-                        "particles_nb": 4
-                    },
-                    "remove": {
-                        "particles_nb": 2
-                    }
-                }
-            },
-            "retina_detect": true
-        });
-    }
-    
     // Mobile Navigation
     const burger = document.querySelector('.burger');
     const nav = document.querySelector('.nav-links');
     const navLinks = document.querySelectorAll('.nav-links li');
     
-    burger.addEventListener('click', () => {
+    burger.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent click from bubbling to document
+        
         // Toggle Nav
         nav.classList.toggle('nav-active');
         
@@ -147,6 +40,28 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+    
+    // Highlight current section in navigation
+    const sections = document.querySelectorAll('section[id]');
+    
+    function highlightNavigation() {
+        const scrollY = window.pageYOffset;
+        
+        sections.forEach(section => {
+            const sectionHeight = section.offsetHeight;
+            const sectionTop = section.offsetTop - 100;
+            const sectionId = section.getAttribute('id');
+            
+            if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+                document.querySelector(`.nav-links a[href*="${sectionId}"]`).classList.add('active');
+            } else {
+                document.querySelector(`.nav-links a[href*="${sectionId}"]`).classList.remove('active');
+            }
+        });
+    }
+    
+    // Add active class styling
+    window.addEventListener('scroll', highlightNavigation);
     
     // Smooth scrolling for navigation links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -220,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Scroll animations
+    // Scroll animations - simplified for more professional appearance
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
@@ -229,7 +144,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('animate');
+                // Just make elements visible without elaborate animations
+                entry.target.style.opacity = 1;
                 observer.unobserve(entry.target);
             }
         });
@@ -237,6 +153,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Observe all sections
     document.querySelectorAll('section').forEach(section => {
+        // Set initial opacity
+        section.style.opacity = 0;
+        section.style.transition = 'opacity 0.5s ease';
         observer.observe(section);
     });
     
@@ -261,108 +180,128 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Experience "View More" functionality
+    // View More functionality for timeline items
     const viewMoreBtns = document.querySelectorAll('.view-more-btn');
     
     viewMoreBtns.forEach(btn => {
         btn.addEventListener('click', function() {
-            // Toggle the 'active' class on the button
-            this.classList.toggle('active');
+            // Find the parent timeline content
+            const timelineContent = this.closest('.timeline-content');
             
-            // Find the details section
-            const details = this.previousElementSibling;
-            
-            // Toggle the 'hidden' class
+            // Toggle the hidden class on the details
+            const details = timelineContent.querySelector('.timeline-details');
             details.classList.toggle('hidden');
             
-            // Update button text
+            // Toggle the active class on the button
+            this.classList.toggle('active');
+            
+            // Change button text based on state
             if (this.classList.contains('active')) {
                 this.textContent = 'View Less';
             } else {
-                this.textContent = 'View More';
+                this.textContent = 'View Details';
             }
-            
-            // Add the arrow icon back
-            const span = document.createElement('span');
-            span.className = 'arrow-icon';
-            this.appendChild(span);
         });
     });
+    
+    // Projects Carousel functionality
+    initProjectsCarousel();
 });
+
+// Initialize the projects carousel
+function initProjectsCarousel() {
+    const carousel = document.getElementById('projects-carousel');
+    const dotsContainer = document.getElementById('carousel-dots');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+    
+    if (!carousel || !dotsContainer) return;
+    
+    const cards = carousel.querySelectorAll('.project-card');
+    const cardWidth = cards[0]?.offsetWidth || 300;
+    const cardMargin = 24; // This should match the gap in CSS
+    const totalWidth = cardWidth + cardMargin;
+    
+    // Create dots based on number of cards
+    const visibleCards = Math.floor(carousel.offsetWidth / totalWidth);
+    const numDots = Math.ceil(cards.length / visibleCards);
+    
+    for (let i = 0; i < numDots; i++) {
+        const dot = document.createElement('div');
+        dot.classList.add('carousel-dot');
+        if (i === 0) dot.classList.add('active');
+        dot.addEventListener('click', () => scrollToPosition(i));
+        dotsContainer.appendChild(dot);
+    }
+    
+    // Set up button listeners
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            const activeDot = dotsContainer.querySelector('.carousel-dot.active');
+            const index = Array.from(dotsContainer.children).indexOf(activeDot);
+            if (index > 0) {
+                scrollToPosition(index - 1);
+            } else {
+                // Loop to the end
+                scrollToPosition(numDots - 1);
+            }
+        });
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            const activeDot = dotsContainer.querySelector('.carousel-dot.active');
+            const index = Array.from(dotsContainer.children).indexOf(activeDot);
+            if (index < numDots - 1) {
+                scrollToPosition(index + 1);
+            } else {
+                // Loop to the beginning
+                scrollToPosition(0);
+            }
+        });
+    }
+    
+    // Scroll to a specific position in the carousel
+    function scrollToPosition(index) {
+        const scrollPosition = index * (totalWidth * visibleCards);
+        carousel.scrollTo({
+            left: scrollPosition,
+            behavior: 'smooth'
+        });
+        
+        // Update active dot
+        const dots = dotsContainer.querySelectorAll('.carousel-dot');
+        dots.forEach(dot => dot.classList.remove('active'));
+        dots[index].classList.add('active');
+    }
+    
+    // Update dots when scrolling
+    carousel.addEventListener('scroll', () => {
+        const scrollPosition = carousel.scrollLeft;
+        const activeIndex = Math.round(scrollPosition / (totalWidth * visibleCards));
+        
+        const dots = dotsContainer.querySelectorAll('.carousel-dot');
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === activeIndex);
+        });
+    });
+    
+    // Handle window resize
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            // Update the carousel when window is resized
+            dotsContainer.innerHTML = '';
+            initProjectsCarousel();
+        }, 250);
+    });
+}
 
 // Create interactive data visualization
 function createDataVisualization() {
-    const container = document.querySelector('.data-points');
-    if (!container) return;
-    
-    // Clear any existing points
-    container.innerHTML = '';
-    
-    // Create random data points
-    const numPoints = 30;
-    const colors = ['#4a6cf7', '#6c757d', '#28a745', '#dc3545'];
-    
-    for (let i = 0; i < numPoints; i++) {
-        const point = document.createElement('div');
-        point.className = 'data-point';
-        
-        // Random position
-        const left = Math.random() * 100;
-        const top = Math.random() * 100;
-        
-        // Random size
-        const size = Math.random() * 20 + 5;
-        
-        // Random color
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        
-        // Random animation delay
-        const delay = Math.random() * 2;
-        
-        // Set styles
-        point.style.left = `${left}%`;
-        point.style.top = `${top}%`;
-        point.style.width = `${size}px`;
-        point.style.height = `${size}px`;
-        point.style.backgroundColor = color;
-        point.style.animationDelay = `${delay}s`;
-        
-        container.appendChild(point);
-    }
-    
-    // Add interactivity - points follow cursor
-    container.addEventListener('mousemove', (e) => {
-        const rect = container.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-        
-        const points = document.querySelectorAll('.data-point');
-        points.forEach(point => {
-            const pointRect = point.getBoundingClientRect();
-            const pointX = pointRect.left - rect.left + pointRect.width / 2;
-            const pointY = pointRect.top - rect.top + pointRect.height / 2;
-            
-            const distX = mouseX - pointX;
-            const distY = mouseY - pointY;
-            const distance = Math.sqrt(distX * distX + distY * distY);
-            
-            if (distance < 100) {
-                const moveX = distX * 0.1;
-                const moveY = distY * 0.1;
-                point.style.transform = `translate(${moveX}px, ${moveY}px)`;
-            } else {
-                point.style.transform = '';
-            }
-        });
-    });
-    
-    // Reset on mouse leave
-    container.addEventListener('mouseleave', () => {
-        const points = document.querySelectorAll('.data-point');
-        points.forEach(point => {
-            point.style.transform = '';
-        });
-    });
+    // Simplified data visualization without particles
+    console.log("Data visualization simplified for a professional look");
 }
 
 // Update copyright year
@@ -372,43 +311,4 @@ document.addEventListener('DOMContentLoaded', function() {
         const currentYear = new Date().getFullYear();
         yearElement.innerHTML = yearElement.innerHTML.replace('2023', currentYear);
     }
-});
-
-function createParticles() {
-    particlesArray = [];
-    let numberOfParticles = 100; // Reducing the number of particles
-    
-    for (let i = 0; i < numberOfParticles; i++) {
-        let size = Math.random() * 5 + 1; // Increasing particle size
-        let x = Math.random() * (canvas.width - size * 2) + size;
-        let y = Math.random() * (canvas.height - size * 2) + size;
-        let directionX = (Math.random() * 2) - 1;
-        let directionY = (Math.random() * 2) - 1;
-        let color = 'rgba(255, 255, 255, 0.5)'; // Increasing opacity
-        
-        particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
-    }
-}
-
-class Particle {
-    constructor(x, y, directionX, directionY, size, color) {
-        this.x = x;
-        this.y = y;
-        this.directionX = directionX;
-        this.directionY = directionY;
-        this.size = size;
-        this.color = color;
-    }
-    
-    update() {
-        this.x += this.directionX * 1.5; // Increasing speed
-        this.y += this.directionY * 1.5; // Increasing speed
-    }
-    
-    draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = this.color;
-        ctx.fill();
-    }
-} 
+}); 

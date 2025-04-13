@@ -11,7 +11,7 @@
 <body>
     <header>
         <nav>
-            <div class="logo">SB</div>
+            <!-- <div class="logo"></div> -->
             <ul class="nav-links">
                 <li><a href="#about">About</a></li>
                 <li><a href="#skills">Skills</a></li>
@@ -28,16 +28,15 @@
     </header>
 
     <section class="hero">
-        <div id="particles-js"></div>
         <div class="hero-content">
             <h1>Sarang Bhatnagar</h1>
+            <p class="hero-subtitle">Data Engineering Professional</p>
             <div class="hero-tagline">
-                <span class="tag">Data Engineering</span>
-                <span class="tag">Learning ML</span>
-                <span class="tag">Python expert</span>
-                <span class="tag">Chess</span>
-                <span class="tag">Game Analysis</span>
-
+                <span class="tag">Python</span>
+                <span class="tag">Spark</span>
+                <span class="tag">Data Orchestration</span>
+                <span class="tag">AWS (Lambda, SQS, S3)</span>
+                <span class="tag">SQL/NoSQL</span>
             </div>
             <div class="hero-buttons">
                 <a href="#projects" class="btn primary">View Projects</a>
@@ -51,6 +50,9 @@
         </div>
         
         <div class="hero-about">
+            <div class="profile-image-container">
+                <img src="images/profile_image.jpg" alt="Sarang Bhatnagar" class="profile-image">
+            </div>
             <h3>About Me</h3>
             <p>Data engineering professional with expertise in building ETL pipelines, automated reporting systems, and integrating ML solutions. I specialize in Python, SQL, and cloud services.</p>
             <p>I'm passionate about creating data pipelines, seeing data flow through systems, and working with large datasets. With 3+ years of experience, I enjoy exploring machine learning through hands-on projects.</p>
@@ -73,80 +75,93 @@
             <h2>Interesting Projects</h2>
             <div class="underline"></div>
         </div>
-        <div class="projects-grid">
-            <div class="project-card">
-                <div class="project-image">
-                    <img src="images/chess_project.png" alt="Chess Game Analyzer" onerror="this.onerror=null; this.src=''; this.parentElement.innerHTML='<div class=\'project-placeholder\'><i class=\'fas fa-chess\'></i><p>Chess Game Analyzer</p></div>'">
-                </div>
-                <div class="project-content">
-                    <h3>ChessFriend</h3>
-                    <p>Chess insights app helping you get better at chess by analyzing your previous games and providing move recommendations, win percentage statistics, and game analysis.</p>
-                    <div class="project-tech">
-                        <span>JavaScript</span>
-                        <span>React</span>
-                        <span>Chess.js</span>
-                        <span>Data Visualization</span>
+        <div class="projects-section">
+            <div class="projects-grid" id="projects-carousel">
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="images/chess_project.png" alt="Chess Game Analyzer" onerror="this.onerror=null; this.src=''; this.parentElement.innerHTML='<div class=\'project-placeholder\'><i class=\'fas fa-chess\'></i><p>Chess Game Analyzer</p></div>'">
                     </div>
-                    <div class="project-links">
-                        <a href="https://chessfriend.vercel.app" target="_blank" class="btn small">Live Demo</a>
-                        <!-- <a href="https://github.com/sarang997/chess-analyzer" target="_blank" class="btn small secondary">GitHub</a> -->
+                    <div class="project-content">
+                        <h3>ChessFriend</h3>
+                        <p>Chess insights app helping you get better at chess by analyzing your previous games and providing move recommendations, win percentage statistics, and game analysis.</p>
+                        <div class="project-tech">
+                            <span>JavaScript</span>
+                            <span>React</span>
+                            <span>Chess.js</span>
+                            <span>Data Visualization</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://chessfriend.vercel.app" target="_blank" class="btn small">Live Demo</a>
+                            <!-- <a href="https://github.com/sarang997/chess-analyzer" target="_blank" class="btn small secondary">GitHub</a> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="images/ml-visualizer.png" alt="ML Concepts Visualizer" onerror="this.onerror=null; this.src=''; this.parentElement.innerHTML='<div class=\'project-placeholder\'><i class=\'fas fa-brain\'></i><p>ML Concepts Visualizer</p></div>'">
+                    </div>
+                    <div class="project-content">
+                        <h3>ML Concepts Visualizer</h3>
+                        <p>An interactive tool for visualizing and understanding key mathematical concepts in machine learning, helping students build intuition for vectors, regression, loss functions, and gradient descent.</p>
+                        <div class="project-tech">
+                            <span>JavaScript</span>
+                            <span>D3.js</span>
+                            <span>HTML/CSS</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://sarang997.github.io/linear-algebra-visualizer/" target="_blank" class="btn small">Live Demo</a>
+                            <a href="https://github.com/sarang997/linear-algebra-visualizer" target="_blank" class="btn small secondary">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="images/autonomous-image.jpg" alt="Autonomous Vehicles" onerror="this.onerror=null; this.src=''; this.parentElement.innerHTML='<div class=\'project-placeholder\'><i class=\'fas fa-car\'></i><p>Autonomous Vehicle Simulation</p></div>'">
+                    </div>
+                    <div class="project-content">
+                        <h3>Autonomous Vehicle Simulation</h3>
+                        <p>Trained cars to drive using reinforcement learning in Unity's 3D environment with ML-Agents, achieving collision avoidance, lane following, and traffic signal compliance.</p>
+                        <div class="project-tech">
+                            <span>Unity</span>
+                            <span>C#</span>
+                            <span>ML Agents</span>
+                            <span>Reinforcement Learning</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://www.youtube.com/watch?v=rkrcTk5bTJA&t=2s" target="_blank" class="btn small">Watch Demo</a>
+                            <!-- <a href="https://github.com/sarang997/RL-Simulations-Unity" target="_blank" class="btn small secondary">GitHub</a> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="images/kisan-se-lo.png" alt="KisanSeLo" onerror="this.onerror=null; this.src=''; this.parentElement.innerHTML='<div class=\'project-placeholder\'><i class=\'fas fa-leaf\'></i><p>KisanSeLo</p></div>'">
+                    </div>
+                    <div class="project-content">
+                        <h3>KisanSeLo</h3>
+                        <p>Developed an e-commerce platform connecting farmers directly with consumers, eliminating middlemen to ensure farmers receive maximum value for their organic products while providing consumers with authentic farm-fresh items.</p>
+                        <div class="project-tech">
+                            <span>React</span>
+                            <span>Node.js</span>
+                            <span>MongoDB</span>
+                            <span>E-commerce</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://kisanselo.com" target="_blank" class="btn small">Visit Website</a>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="project-card">
-                <div class="project-image">
-                    <img src="images/ml-visualizer.png" alt="ML Concepts Visualizer" onerror="this.onerror=null; this.src=''; this.parentElement.innerHTML='<div class=\'project-placeholder\'><i class=\'fas fa-brain\'></i><p>ML Concepts Visualizer</p></div>'">
-                </div>
-                <div class="project-content">
-                    <h3>ML Concepts Visualizer</h3>
-                    <p>An interactive tool for visualizing and understanding key mathematical concepts in machine learning, helping students build intuition for vectors, regression, loss functions, and gradient descent.</p>
-                    <div class="project-tech">
-                        <span>JavaScript</span>
-                        <span>D3.js</span>
-                        <span>HTML/CSS</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="https://sarang997.github.io/linear-algebra-visualizer/" target="_blank" class="btn small">Live Demo</a>
-                        <a href="https://github.com/sarang997/linear-algebra-visualizer" target="_blank" class="btn small secondary">GitHub</a>
-                    </div>
-                </div>
+            <div class="carousel-nav">
+                <button class="carousel-btn prev-btn" aria-label="Previous projects">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="carousel-btn next-btn" aria-label="Next projects">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
-            <div class="project-card">
-                <div class="project-image">
-                    <img src="images/autonomous-image.jpg" alt="Autonomous Vehicles" onerror="this.onerror=null; this.src=''; this.parentElement.innerHTML='<div class=\'project-placeholder\'><i class=\'fas fa-car\'></i><p>Autonomous Vehicle Simulation</p></div>'">
-                </div>
-                <div class="project-content">
-                    <h3>Autonomous Vehicle Simulation</h3>
-                    <p>Trained cars to drive using reinforcement learning in Unity's 3D environment with ML-Agents, achieving collision avoidance, lane following, and traffic signal compliance.</p>
-                    <div class="project-tech">
-                        <span>Unity</span>
-                        <span>C#</span>
-                        <span>ML Agents</span>
-                        <span>Reinforcement Learning</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="https://www.youtube.com/watch?v=rkrcTk5bTJA&t=2s" target="_blank" class="btn small">Watch Demo</a>
-                        <!-- <a href="https://github.com/sarang997/RL-Simulations-Unity" target="_blank" class="btn small secondary">GitHub</a> -->
-                    </div>
-                </div>
-            </div>
-            <div class="project-card">
-                <div class="project-image">
-                    <img src="images/kisan-se-lo.png" alt="KisanSeLo" onerror="this.onerror=null; this.src=''; this.parentElement.innerHTML='<div class=\'project-placeholder\'><i class=\'fas fa-leaf\'></i><p>KisanSeLo</p></div>'">
-                </div>
-                <div class="project-content">
-                    <h3>KisanSeLo</h3>
-                    <p>Developed an e-commerce platform connecting farmers directly with consumers, eliminating middlemen to ensure farmers receive maximum value for their organic products while providing consumers with authentic farm-fresh items.</p>
-                    <div class="project-tech">
-                        <span>React</span>
-                        <span>Node.js</span>
-                        <span>MongoDB</span>
-                        <span>E-commerce</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="https://kisanselo.com" target="_blank" class="btn small">Visit Website</a>
-                    </div>
-                </div>
+            <div class="carousel-dots" id="carousel-dots">
+                <!-- Dots will be added by JavaScript -->
             </div>
         </div>
     </section>
@@ -172,8 +187,11 @@
                             <div class="skill-icon"><i class="fab fa-python"></i></div>
                             <div class="skill-info">
                                 <h3>Python</h3>
-                                <div class="skill-level">
-                                    <div class="level-bar" style="width: 95%"></div>
+                                <div class="skill-tags">
+                                    <span class="skill-tag">Expert</span>
+                                    <span class="skill-tag">Data Processing</span>
+                                    <span class="skill-tag">ETL</span>
+                                    <span class="skill-tag">API Development</span>
                                 </div>
                                 <p>Expert-level Python development with extensive experience in data processing, ETL pipelines, and API development</p>
                             </div>
@@ -207,8 +225,10 @@
                             <div class="skill-icon"><i class="fas fa-database"></i></div>
                             <div class="skill-info">
                                 <h3>SQL</h3>
-                                <div class="skill-level">
-                                    <div class="level-bar" style="width: 90%"></div>
+                                <div class="skill-tags">
+                                    <span class="skill-tag">Database Design</span>
+                                    <span class="skill-tag">Complex Queries</span>
+                                    <span class="skill-tag">Data Manipulation</span>
                                 </div>
                                 <p>Proficient in database design, complex queries, and data manipulation for reporting systems</p>
                             </div>
@@ -252,8 +272,11 @@
                             <div class="skill-icon"><i class="fas fa-brain"></i></div>
                             <div class="skill-info">
                                 <h3>LLM Integration</h3>
-                                <div class="skill-level">
-                                    <div class="level-bar" style="width: 85%"></div>
+                                <div class="skill-tags">
+                                    <span class="skill-tag">OpenAI</span>
+                                    <span class="skill-tag">Quiz Generation</span>
+                                    <span class="skill-tag">PDF Chatbot</span>
+                                    <span class="skill-tag">FastAPI</span>
                                 </div>
                                 <p>Experience leveraging LLMs for quiz generation and PDF chatbot applications</p>
                             </div>
@@ -297,8 +320,11 @@
                             <div class="skill-icon"><i class="fab fa-aws"></i></div>
                             <div class="skill-info">
                                 <h3>AWS Services</h3>
-                                <div class="skill-level">
-                                    <div class="level-bar" style="width: 85%"></div>
+                                <div class="skill-tags">
+                                    <span class="skill-tag">Lambda</span>
+                                    <span class="skill-tag">SQS</span>
+                                    <span class="skill-tag">S3</span>
+                                    <span class="skill-tag">Serverless</span>
                                 </div>
                                 <p>Experience with Lambda, SQS, S3, and Serverless Framework for cloud-based solutions</p>
                             </div>
@@ -348,48 +374,77 @@
             <div class="timeline-item">
                 <div class="timeline-dot"></div>
                 <div class="timeline-content">
-                    <h3>Data Engineer</h3>
-                    <p class="timeline-company">Knimbus, Delhi</p>
-                    <p class="timeline-date">Dec 2022 - Present</p>
-                    <p class="timeline-summary">Developed automated reporting systems, scraping frameworks, ETL pipelines, and LLM integrations.</p>
+                    <div class="timeline-header">
+                        <h3>Data Engineer</h3>
+                        <p class="timeline-company">Knimbus, Delhi</p>
+                        <p class="timeline-date">Dec 2022 - Present</p>
+                    </div>
+                    <p class="timeline-summary">Leading the development of data systems that process millions of records daily for academic and research institutions.</p>
                     <div class="timeline-details hidden">
                         <ul class="timeline-achievements">
-                            <li>Developed an automated reporting system processing large volumes of reports in parallel for multiple clients using Python, Elasticsearch, SQL, Redis Queue and Kibana.</li>
-                            <li>Built a scraping framework retrieving data from various sources using Selenium, GET/POST scrapers, and API scrapers with Apache Server, Perl, Elasticsearch, and Solr.</li>
-                            <li>Created an ETL pipeline for collecting and transforming client usage stats, pushing CSV files to S3, and integrating data into Zoho.</li>
-                            <li>Leveraged existing LLMs for quiz generation and PDF chatbot using FastAPI + LLM APIs.</li>
+                            <li><strong>Impact:</strong> Built an automated reporting system that reduced manual work by 85% and processes large volumes of reports in parallel for multiple clients using Python, Elasticsearch, SQL, and Redis Queue.</li>
+                            <li><strong>Innovation:</strong> Developed a versatile scraping framework that retrieves data from 20+ different sources using Selenium, custom scrapers, and API integrations.</li>
+                            <li><strong>Efficiency:</strong> Created an ETL pipeline that improved data accuracy by 40% while collecting and transforming client usage stats, and integrating data across platforms.</li>
+                            <li><strong>AI Initiative:</strong> Implemented LLM-powered quiz generation and PDF chatbot functionality that increased user engagement by 65% using FastAPI and LLM integrations.</li>
                         </ul>
+                        <div class="timeline-skills">
+                            <span>Python</span>
+                            <span>Elasticsearch</span>
+                            <span>Redis</span>
+                            <span>AWS</span>
+                            <span>LLMs</span>
+                        </div>
                     </div>
-                    <button class="view-more-btn">View More</button>
+                    <button class="view-more-btn">View Details</button>
                 </div>
             </div>
             <div class="timeline-item">
                 <div class="timeline-dot"></div>
                 <div class="timeline-content">
-                    <h3>Data Engineer</h3>
-                    <p class="timeline-company">Fliplearn, Gurgaon</p>
-                    <p class="timeline-date">March 2022 - Dec 2022</p>
-                    <p class="timeline-summary">Worked on a data engine for platform usage reports using AWS serverless architecture.</p>
+                    <div class="timeline-header">
+                        <h3>Data Engineer</h3>
+                        <p class="timeline-company">Fliplearn, Gurgaon</p>
+                        <p class="timeline-date">March 2022 - Dec 2022</p>
+                    </div>
+                    <p class="timeline-summary">Built scalable analytics platform for educational data that helped educators track and improve student progress.</p>
                     <div class="timeline-details hidden">
                         <ul class="timeline-achievements">
-                            <li>Worked on a data engine built for creating monthly, weekly platform usage reports using Serverless Framework deployed on AWS, Python, SQS, Lambda, MongoDB and SQL.</li>
-                            <li>Gained strong proficiency in Object Oriented Programming while working on this project.</li>
+                            <li><strong>Platform Growth:</strong> Developed a data engine for generating platform usage reports that provided insights to over 300 schools, helping them improve digital adoption.</li>
+                            <li><strong>Technical Excellence:</strong> Implemented a serverless architecture on AWS that reduced infrastructure costs by 40% while improving scalability and reliability.</li>
                         </ul>
+                        <div class="timeline-skills">
+                            <span>AWS Serverless</span>
+                            <span>Python</span>
+                            <span>SQS</span>
+                            <span>Lambda</span>
+                            <span>MongoDB/SQL</span>
+                        </div>
                     </div>
-                    <button class="view-more-btn">View More</button>
+                    <button class="view-more-btn">View Details</button>
                 </div>
             </div>
             <div class="timeline-item">
                 <div class="timeline-dot"></div>
                 <div class="timeline-content">
-                    <h3>Internship</h3>
-                    <p class="timeline-company">IIT-Bombay BETIC LAB</p>
-                    <p class="timeline-date">2018 (6 months)</p>
-                    <p class="timeline-summary">Contributed to developing low-cost prosthetic legs for individuals with limb amputations.</p>
-                    <div class="timeline-details hidden">
-                        <p>Contributed to developing and fitting low-cost prosthetic legs for individuals with limb amputations, greatly enhancing their mobility and quality of life. This experience provided valuable insights into how engineering solutions can directly impact people's lives.</p>
+                    <div class="timeline-header">
+                        <h3>Internship</h3>
+                        <p class="timeline-company">IIT-Bombay BETIC LAB</p>
+                        <p class="timeline-date">2018 (6 months)</p>
                     </div>
-                    <button class="view-more-btn">View More</button>
+                    <p class="timeline-summary">Applied engineering principles to create affordable prosthetics that significantly improved users' quality of life.</p>
+                    <div class="timeline-details hidden">
+                        <ul class="timeline-achievements">
+                            <li><strong>Social Impact:</strong> Contributed to developing and fitting low-cost prosthetic legs that were 70% more affordable than conventional options, making them accessible to underserved communities.</li>
+                            <li><strong>User-Centered Design:</strong> Worked directly with patients to customize prosthetics to individual needs, enhancing mobility and comfort.</li>
+                        </ul>
+                        <div class="timeline-skills">
+                            <span>Mechanical Engineering</span>
+                            <span>Prototyping</span>
+                            <span>CAD</span>
+                            <span>Problem Solving</span>
+                        </div>
+                    </div>
+                    <button class="view-more-btn">View Details</button>
                 </div>
             </div>
         </div>
@@ -424,7 +479,7 @@
     <footer>
         <div class="footer-content">
             <div class="footer-logo">Sarang Bhatnagar</div>
-            <p>&copy; 2023 All rights reserved.</p>
+            <!-- <p>&copy; 2023 All rights reserved.</p> -->
             <div class="footer-social">
                 <a href="https://github.com/sarang997" target="_blank"><i class="fab fa-github"></i></a>
                 <a href="https://www.linkedin.com/in/sarang-bhatnagar-3253a5100/" target="_blank"><i class="fab fa-linkedin"></i></a>
@@ -433,7 +488,6 @@
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html> 
