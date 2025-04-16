@@ -4,21 +4,650 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sarang Bhatnagar | Data Enthusiast</title>
-    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a; /* Dark blue/gray */
+            --card-bg-color: #1e293b; /* Slightly lighter card background */
+            --text-color: #e2e8f0; /* Light gray text */
+            --heading-color: #f8fafc; /* White headings */
+            --accent-color: #22d3ee; /* Cyan accent */
+            --secondary-text-color: #94a3b8; /* Muted text */
+            --border-color: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--heading-color);
+            margin-bottom: 0.8rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--secondary-text-color);
+        }
+
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #67e8f9; /* Lighter cyan on hover */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: rgba(15, 23, 42, 0.8); /* Semi-transparent dark bg */
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav-left {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--heading-color);
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+        }
+
+        .nav-links li {
+            margin-left: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--accent-color);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-right a {
+            color: var(--secondary-text-color);
+            margin-left: 1.5rem;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-right a:hover {
+            color: var(--accent-color);
+        }
+
+        .burger {
+            display: none; /* Add JS for mobile nav toggle if needed */
+            cursor: pointer;
+        }
+        .burger div {
+            width: 25px;
+            height: 3px;
+            background-color: var(--text-color);
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        /* Section Styles */
+        section {
+            padding: 6rem 0 4rem; /* Add top padding to account for fixed header */
+            min-height: 80vh;
+        }
+
+        .section-header {
+            text-align: left;
+            margin-bottom: 3rem;
+            padding-left: 2rem; /* Indent like '/ about me' */
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+        }
+         .section-header h2::before {
+            content: "/ ";
+            color: var(--accent-color);
+         }
+
+        /* About Section */
+        #about {
+            padding-top: 8rem; /* Extra padding for first section */
+        }
+        .about-content {
+            display: flex;
+            align-items: flex-start; /* Align items to the top */
+            gap: 3rem;
+            max-width: 1100px; /* Slightly narrower content */
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .about-text {
+            flex: 2; /* Takes more space */
+        }
+         .about-text h3 {
+             font-size: 1.8rem;
+             margin-bottom: 1.5rem;
+             color: var(--heading-color);
+         }
+         .about-text p {
+             margin-bottom: 1.2rem;
+             color: var(--secondary-text-color);
+             font-size: 1rem;
+         }
+         .tech-list {
+             margin-top: 2rem;
+         }
+         .tech-list h4 {
+             color: var(--heading-color);
+             margin-bottom: 1rem;
+         }
+         .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Two columns */
+            gap: 0.5rem 1rem; /* Row and column gap */
+            list-style: none;
+            padding-left: 0;
+         }
+         .tech-grid li {
+             position: relative;
+             padding-left: 1.5rem; /* Space for the arrow */
+             color: var(--secondary-text-color);
+         }
+        .tech-grid li::before {
+            content: '▹'; /* Arrow */
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .about-image {
+            flex: 1; /* Takes less space */
+            text-align: center; /* Center image */
+        }
+        .about-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .project-card {
+            background-color: var(--card-bg-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Pushes links to bottom */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .project-header .folder-icon i {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+        }
+
+        .project-header .external-links a {
+            color: var(--secondary-text-color);
+            margin-left: 0.8rem;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+        .project-header .external-links a:hover {
+            color: var(--accent-color);
+        }
+
+
+        .project-content h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: var(--heading-color);
+        }
+
+        .project-content p {
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            flex-grow: 1; /* Allows description to take available space */
+            color: var(--secondary-text-color);
+        }
+
+        .project-tech {
+            margin-top: 1rem;
+            margin-bottom: 1.5rem; /* Space before links */
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .project-tech span {
+            background-color: rgba(34, 211, 238, 0.1); /* Light cyan background */
+            color: var(--accent-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .project-links a {
+            display: inline-block; /* Align buttons properly */
+            margin-right: 0.5rem; /* Space between buttons */
+            padding: 0.5rem 1rem;
+            background-color: transparent;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .project-links a:hover {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+        }
+        .project-links a.secondary { /* Style for GitHub link if needed */
+            border-color: var(--secondary-text-color);
+            color: var(--secondary-text-color);
+        }
+        .project-links a.secondary:hover {
+            background-color: var(--secondary-text-color);
+            color: var(--bg-color);
+        }
+
+
+        /* Experience Section */
+        .experience-layout {
+            display: flex;
+            gap: 3rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .company-tabs {
+            flex: 1; /* Takes less space */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Align tabs to the left */
+        }
+
+        .company-tab {
+            background: none;
+            border: none;
+            color: var(--secondary-text-color);
+            padding: 0.8rem 1.5rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            text-align: left;
+            border-left: 3px solid transparent; /* Indicator */
+            transition: color 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+            width: 100%; /* Make tabs fill container width */
+        }
+
+        .company-tab:hover {
+            background-color: rgba(30, 41, 59, 0.5); /* Slight hover effect */
+            color: var(--accent-color);
+        }
+
+        .company-tab.active {
+            color: var(--accent-color);
+            border-left-color: var(--accent-color);
+            background-color: rgba(34, 211, 238, 0.05); /* Subtle active background */
+        }
+
+        .experience-details {
+            flex: 3; /* Takes more space */
+        }
+
+        .experience-content {
+            display: none; /* Hide all by default */
+            padding-left: 1rem; /* Indent details slightly */
+        }
+
+        .experience-content.active {
+            display: block; /* Show active one */
+        }
+
+        .experience-content h3 {
+             font-size: 1.5rem;
+             font-weight: 600;
+             margin-bottom: 0.2rem;
+         }
+        .experience-content h3 span { /* Company name */
+             color: var(--accent-color);
+         }
+
+        .experience-content .date {
+             font-size: 0.9rem;
+             color: var(--secondary-text-color);
+             margin-bottom: 1.5rem;
+             display: block; /* Ensure it takes its own line */
+         }
+
+        .experience-content ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .experience-content li {
+            position: relative;
+            padding-left: 1.8rem; /* Space for the arrow */
+            margin-bottom: 0.8rem;
+            color: var(--secondary-text-color);
+        }
+
+        .experience-content li::before {
+            content: '▹'; /* Arrow */
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 1.2rem; /* Slightly larger arrow */
+            top: -2px; /* Adjust vertical alignment */
+        }
+
+        .experience-content strong {
+            color: var(--text-color); /* Highlight keywords */
+            font-weight: 500;
+        }
+
+        .timeline-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
+        .timeline-skills span {
+            background-color: var(--card-bg-color);
+            color: var(--secondary-text-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px; /* Pill shape */
+            font-size: 0.85rem;
+            border: 1px solid var(--border-color);
+        }
+
+
+        /* Contact Section */
+        #contact {
+            text-align: center;
+            padding-bottom: 6rem;
+        }
+        .contact-container {
+             max-width: 700px;
+             margin: 2rem auto 0;
+             padding: 0 2rem;
+        }
+        .contact-container p {
+             font-size: 1.1rem;
+             margin-bottom: 2rem;
+             color: var(--text-color);
+        }
+
+        .contact-button {
+             display: inline-block;
+             padding: 0.8rem 2rem;
+             border: 1px solid var(--accent-color);
+             color: var(--accent-color);
+             background-color: transparent;
+             border-radius: 5px;
+             font-size: 1rem;
+             font-weight: 500;
+             transition: background-color 0.3s ease, color 0.3s ease;
+        }
+         .contact-button:hover {
+             background-color: var(--accent-color);
+             color: var(--bg-color);
+         }
+        .contact-button i {
+            margin-right: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem; /* Space above footer */
+            border-top: 1px solid var(--border-color);
+            color: var(--secondary-text-color);
+        }
+        .footer-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        .footer-social a {
+            color: var(--secondary-text-color);
+            margin: 0 0.8rem;
+            font-size: 1.3rem;
+            transition: color 0.3s ease;
+        }
+        .footer-social a:hover {
+            color: var(--accent-color);
+        }
+        .footer-credit {
+            font-size: 0.9rem;
+        }
+
+
+         /* Responsive adjustments */
+         @media (max-width: 768px) {
+             .nav-links {
+                 display: none;
+             }
+             .burger {
+                 display: block;
+             }
+             .hero-section h1 {
+                font-size: 1.8rem !important; /* Forcing smaller size */
+             }
+             .hero-section .subtitle { /* Adjust mobile subtitle too */
+                 font-size: 1.1rem;
+             }
+             .hero-section .hero-intro {
+                 font-size: 1.1rem;
+             }
+             .about-content {
+                 flex-direction: column;
+                 align-items: center; /* Center items when stacked */
+             }
+             .about-image {
+                 order: -1; /* Display image first */
+                 margin-bottom: 2rem; /* Add space below image */
+                 margin-top: 0; /* Remove top margin */
+                 max-width: 250px; /* Keep image size constraint */
+             }
+             .about-text {
+                 order: 1; /* Display text second */
+             }
+             .tech-grid {
+                 grid-template-columns: 1fr; /* Single column on mobile */
+             }
+             .experience-layout {
+                flex-direction: column;
+             }
+             .company-tabs {
+                 flex-direction: row;
+                 overflow-x: auto; /* Allow horizontal scroll for tabs */
+                 white-space: nowrap;
+                 border-bottom: 1px solid var(--border-color);
+                 margin-bottom: 1.5rem;
+                 width: 100%;
+             }
+             .company-tab {
+                 border-left: none;
+                 border-bottom: 3px solid transparent; /* Indicator on bottom */
+                 margin-bottom: 0;
+                 padding: 0.8rem 1rem; /* Adjust padding */
+             }
+            .company-tab.active {
+                 border-left-color: transparent;
+                 border-bottom-color: var(--accent-color);
+             }
+             .experience-details {
+                padding-left: 0; /* Remove indent */
+             }
+             /* Reduce section heading size on mobile */
+             .section-header h2 {
+                 font-size: 1.8rem;
+             }
+         }
+
+    </style>
+    <style>
+        .hero-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 60vh; /* Adjust height as needed */
+            text-align: center;
+            padding-top: 10rem; /* Increased top padding */
+            padding-bottom: 4rem;
+        }
+        .hero-section h1 {
+            font-size: 4rem; /* Large text */
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--heading-color);
+            opacity: 0; /* Start hidden for fade-in */
+            animation: fadeIn 1s ease-out 0.5s forwards; /* Apply fade-in animation */
+        }
+        .hero-section h1 .highlight {
+            color: var(--accent-color); /* Highlight name */
+        }
+        /* Removed blink animation */
+
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px); /* Optional: slight upward movement */
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-section .subtitle {
+            font-size: 1.3rem; /* Reduced subtitle size */
+            color: var(--secondary-text-color);
+            margin-bottom: 2rem; /* Space below subtitle */
+        }
+        .hero-section .hero-intro {
+            font-size: 1.1rem; /* Slightly smaller than subtitle */
+            color: var(--secondary-text-color);
+            max-width: 600px; /* Limit width for readability */
+            margin: 0 auto 2rem; /* Center and add bottom margin */
+        }
+        /* Add styles for any additional text if needed */
+    </style>
+    <!-- Canvas Background Styles -->
+    <style>
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Place behind content */
+            pointer-events: none; /* Allow clicks to pass through */
+        }
+        .hero-section {
+            position: relative; /* Needed for absolute positioning of canvas */
+            overflow: hidden; /* Prevent canvas overflow if needed */
+        }
+    </style>
 </head>
 <body>
     <header>
         <nav>
-            <!-- <div class="logo"></div> -->
+            <div class="nav-left"></div>
             <ul class="nav-links">
                 <li><a href="#about">About</a></li>
-                <li><a href="#skills">Skills</a></li>
                 <li><a href="#experience">Experience</a></li>
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
+            <div class="nav-right">
+                 <a href="https://github.com/sarang997" target="_blank" aria-label="GitHub Profile"><i class="fab fa-github"></i></a>
+                 <a href="https://www.linkedin.com/in/sarang-bhatnagar-3253a5100/" target="_blank" aria-label="LinkedIn Profile"><i class="fab fa-linkedin"></i></a>
+            </div>
             <div class="burger">
                 <div class="line1"></div>
                 <div class="line2"></div>
@@ -27,467 +656,349 @@
         </nav>
     </header>
 
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Sarang Bhatnagar</h1>
-            <p class="hero-subtitle">Data Engineering Professional</p>
-            <div class="hero-tagline">
-                <span class="tag">Python</span>
-                <span class="tag">Spark</span>
-                <span class="tag">Data Orchestration</span>
-                <span class="tag">AWS (Lambda, SQS, S3)</span>
-                <span class="tag">SQL/NoSQL</span>
-            </div>
-            <div class="hero-buttons">
-                <a href="#projects" class="btn primary">View Projects</a>
-                <a href="https://www.linkedin.com/in/sarang-bhatnagar-3253a5100/" target="_blank" class="btn secondary">
-                    <i class="fab fa-linkedin"></i> LinkedIn
-                </a>
-                <a href="https://github.com/sarang997" target="_blank" class="btn secondary">
-                    <i class="fab fa-github"></i> GitHub
-                </a>
-            </div>
+    <section id="hero" class="hero-section">
+        <canvas id="hero-canvas"></canvas>
+        <div class="hero-content container">
+             <h1>Hi, <span class="highlight">Sarang</span> here.</h1>
+             <p class="subtitle">I build things with data.</p>
+             <p class="hero-intro">Data engineering professional with expertise in building ETL pipelines, automated reporting systems, and integrating ML solutions. I specialize in Python, SQL, and cloud services.</p>
         </div>
-        
-        <div class="hero-about">
-            <div class="profile-image-container">
-                <img src="images/profile_image.jpg" alt="Sarang Bhatnagar" class="profile-image">
+    </section>
+
+    <section id="about" class="container">
+         <div class="section-header">
+             <h2>About Me</h2>
+         </div>
+        <div class="about-content">
+            <div class="about-text">
+                <h3>Data engineering professional</h3>
+                <p>With expertise in building ETL pipelines, automated reporting systems, and integrating ML solutions. I specialize in Python, SQL, and cloud services.</p>
+                <p>I'm passionate about creating data pipelines, seeing data flow through systems, and working with large datasets. With 3+ years of experience, I enjoy exploring machine learning through hands-on projects.</p>
+                <p>With a background in Mechanical Engineering from Symbiosis Institute of Technology, I bring an analytical mindset to data challenges. When not coding, I find inspiration through music and creative exploration.</p>
+                <p>Chess is another passion I've pursued since my university days, where I was a member of the university chess team. The strategic thinking and pattern recognition skills from chess complement my analytical approach to data problems.</p>
+
+                <div class="tech-list">
+                     <h4>Here are some technologies I've been working with:</h4>
+                     <ul class="tech-grid">
+                         <li>Python (Expert)</li>
+                         <li>SQL & NoSQL (MongoDB, Elasticsearch)</li>
+                         <li>ETL Processes & Data Pipelines</li>
+                         <li>AWS (Lambda, SQS, S3)</li>
+                         <li>Apache Spark</li>
+                         <li>Data Orchestration Tools</li>
+                         <li>LLM Integration (OpenAI, FastAPI)</li>
+                         <li>Perl</li>
+                         <li>C# (Unity ML Agents)</li>
+                         <li>Git & Version Control</li>
+                         <li>Data Visualization (Kibana, Superset)</li>
+                         <li>React & JavaScript</li>
+                     </ul>
             </div>
-            <h3>About Me</h3>
-            <p>Data engineering professional with expertise in building ETL pipelines, automated reporting systems, and integrating ML solutions. I specialize in Python, SQL, and cloud services.</p>
-            <p>I'm passionate about creating data pipelines, seeing data flow through systems, and working with large datasets. With 3+ years of experience, I enjoy exploring machine learning through hands-on projects.</p>
-            <p>With a background in Mechanical Engineering from Symbiosis Institute of Technology, I bring an analytical mindset to data challenges. When not coding, I find inspiration through music and creative exploration.</p>
-            <p>Chess is another passion I've pursued since my university days, where I was a member of the university chess team. The strategic thinking and pattern recognition skills from chess complement my analytical approach to data problems.</p>
-            <div class="hero-skills">
-                <span>Python</span>
-                <span>SQL</span>
-                <span>ETL</span>
-                <span>AWS</span>
-                <span>Elasticsearch</span>
-                <span>LLMs</span>
-                <span>Chess</span>
+            </div>
+            <div class="about-image">
+                <img src="images/profile_image.jpg" alt="Sarang Bhatnagar" class="profile-image">
             </div>
         </div>
     </section>
 
-    <section id="projects" class="projects">
-        <div class="section-header">
-            <h2>Interesting Projects</h2>
-            <div class="underline"></div>
+    <section id="experience">
+        <div class="section-header container">
+            <h2>Experience</h2>
         </div>
-        <div class="projects-section">
-            <div class="projects-grid" id="projects-carousel">
+        <div class="experience-layout container">
+            <div class="company-tabs" id="company-tabs">
+                <button class="company-tab active" data-target="knimbus-exp">Knimbus</button>
+                <button class="company-tab" data-target="fliplearn-exp">Fliplearn</button>
+                <button class="company-tab" data-target="iitb-exp">IIT-Bombay BETIC LAB</button>
+            </div>
+            <div class="experience-details" id="experience-details">
+                <div class="experience-content active" id="knimbus-exp">
+                    <h3>Data Engineer @ <span>Knimbus</span></h3>
+                    <span class="date">Dec 2022 - Present</span>
+                     <ul>
+                         <li>Built an automated reporting system that reduced manual work by 85% and processes large volumes of reports in parallel for multiple clients using <strong>Python, Elasticsearch, SQL, and Redis Queue</strong>.</li>
+                         <li>Developed a versatile scraping framework that retrieves data from 20+ different sources using <strong>Selenium, custom scrapers, and API integrations</strong>.</li>
+                         <li>Created an ETL pipeline that improved data accuracy by 40% while collecting and transforming client usage stats, and integrating data across platforms.</li>
+                         <li>Implemented LLM-powered quiz generation and PDF chatbot functionality that increased user engagement by 65% using <strong>FastAPI and LLM integrations</strong>.</li>
+                     </ul>
+                     <div class="timeline-skills">
+                         <span>Python</span>
+                         <span>Elasticsearch</span>
+                         <span>Redis</span>
+                         <span>AWS</span>
+                         <span>LLMs</span>
+                         <span>ETL</span>
+                         <span>Web Scraping</span>
+                     </div>
+                </div>
+                 <div class="experience-content" id="fliplearn-exp">
+                    <h3>Data Engineer @ <span>Fliplearn</span></h3>
+                    <span class="date">March 2022 - Dec 2022</span>
+                     <ul>
+                         <li>Developed a data engine for generating platform usage reports that provided insights to over 300 schools, helping them improve digital adoption.</li>
+                         <li>Implemented a serverless architecture on AWS that reduced infrastructure costs by 40% while improving scalability and reliability.</li>
+                     </ul>
+                     <div class="timeline-skills">
+                         <span>AWS Serverless</span>
+                         <span>Python</span>
+                         <span>SQS</span>
+                         <span>Lambda</span>
+                         <span>MongoDB</span>
+                         <span>SQL</span>
+                         <span>Data Analytics</span>
+                     </div>
+                </div>
+                 <div class="experience-content" id="iitb-exp">
+                     <h3>Intern @ <span>IIT-Bombay BETIC LAB</span></h3>
+                     <span class="date">2018 (6 months)</span>
+                     <ul>
+                         <li>Contributed to developing and fitting low-cost prosthetic legs that were 70% more affordable than conventional options, making them accessible to underserved communities.</li>
+                         <li>Worked directly with patients to customize prosthetics to individual needs, enhancing mobility and comfort.</li>
+                     </ul>
+                     <div class="timeline-skills">
+                         <span>Mechanical Engineering</span>
+                         <span>Prototyping</span>
+                         <span>CAD</span>
+                         <span>Problem Solving</span>
+                          <span>User-Centered Design</span>
+                     </div>
+                 </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <div class="section-header container">
+            <h2>Projects</h2>
+        </div>
+        <div class="projects-grid container">
                 <div class="project-card">
-                    <div class="project-image">
-                        <img src="images/chess_project.png" alt="Chess Game Analyzer" onerror="this.onerror=null; this.src=''; this.parentElement.innerHTML='<div class=\'project-placeholder\'><i class=\'fas fa-chess\'></i><p>Chess Game Analyzer</p></div>'">
+                <div class="project-header">
+                    <span class="folder-icon"><i class="fas fa-folder"></i></span>
+                    <div class="external-links">
+                        <a href="https://chessfriend.vercel.app" target="_blank" aria-label="Live Demo"><i class="fas fa-external-link-alt"></i></a>
+                    </div>
                     </div>
                     <div class="project-content">
                         <h3>ChessFriend</h3>
                         <p>Chess insights app helping you get better at chess by analyzing your previous games and providing move recommendations, win percentage statistics, and game analysis.</p>
+                </div>
                         <div class="project-tech">
                             <span>JavaScript</span>
                             <span>React</span>
                             <span>Chess.js</span>
                             <span>Data Visualization</span>
                         </div>
-                        <div class="project-links">
-                            <a href="https://chessfriend.vercel.app" target="_blank" class="btn small">Live Demo</a>
-                            <!-- <a href="https://github.com/sarang997/chess-analyzer" target="_blank" class="btn small secondary">GitHub</a> -->
                         </div>
+
+            <div class="project-card">
+                 <div class="project-header">
+                    <span class="folder-icon"><i class="fas fa-folder"></i></span>
+                    <div class="external-links">
+                        <a href="https://sarang997.github.io/linear-algebra-visualizer/" target="_blank" aria-label="Live Demo"><i class="fas fa-external-link-alt"></i></a>
+                        <a href="https://github.com/sarang997/linear-algebra-visualizer" target="_blank" aria-label="GitHub Repository"><i class="fab fa-github"></i></a>
                     </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="images/ml-visualizer.png" alt="ML Concepts Visualizer" onerror="this.onerror=null; this.src=''; this.parentElement.innerHTML='<div class=\'project-placeholder\'><i class=\'fas fa-brain\'></i><p>ML Concepts Visualizer</p></div>'">
                     </div>
                     <div class="project-content">
                         <h3>ML Concepts Visualizer</h3>
                         <p>An interactive tool for visualizing and understanding key mathematical concepts in machine learning, helping students build intuition for vectors, regression, loss functions, and gradient descent.</p>
+                 </div>
                         <div class="project-tech">
                             <span>JavaScript</span>
                             <span>D3.js</span>
                             <span>HTML/CSS</span>
                         </div>
-                        <div class="project-links">
-                            <a href="https://sarang997.github.io/linear-algebra-visualizer/" target="_blank" class="btn small">Live Demo</a>
-                            <a href="https://github.com/sarang997/linear-algebra-visualizer" target="_blank" class="btn small secondary">GitHub</a>
                         </div>
+
+            <div class="project-card">
+                 <div class="project-header">
+                    <span class="folder-icon"><i class="fas fa-folder"></i></span>
+                    <div class="external-links">
+                        <a href="https://www.youtube.com/watch?v=rkrcTk5bTJA&t=2s" target="_blank" aria-label="Watch Demo"><i class="fas fa-external-link-alt"></i></a>
                     </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="images/autonomous-image.jpg" alt="Autonomous Vehicles" onerror="this.onerror=null; this.src=''; this.parentElement.innerHTML='<div class=\'project-placeholder\'><i class=\'fas fa-car\'></i><p>Autonomous Vehicle Simulation</p></div>'">
                     </div>
                     <div class="project-content">
                         <h3>Autonomous Vehicle Simulation</h3>
                         <p>Trained cars to drive using reinforcement learning in Unity's 3D environment with ML-Agents, achieving collision avoidance, lane following, and traffic signal compliance.</p>
+                </div>
                         <div class="project-tech">
                             <span>Unity</span>
                             <span>C#</span>
                             <span>ML Agents</span>
                             <span>Reinforcement Learning</span>
                         </div>
-                        <div class="project-links">
-                            <a href="https://www.youtube.com/watch?v=rkrcTk5bTJA&t=2s" target="_blank" class="btn small">Watch Demo</a>
-                            <!-- <a href="https://github.com/sarang997/RL-Simulations-Unity" target="_blank" class="btn small secondary">GitHub</a> -->
                         </div>
+
+            <div class="project-card">
+                 <div class="project-header">
+                    <span class="folder-icon"><i class="fas fa-folder"></i></span>
+                    <div class="external-links">
+                        <a href="https://kisanselo.com" target="_blank" aria-label="Visit Website"><i class="fas fa-external-link-alt"></i></a>
                     </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="images/kisan-se-lo.png" alt="KisanSeLo" onerror="this.onerror=null; this.src=''; this.parentElement.innerHTML='<div class=\'project-placeholder\'><i class=\'fas fa-leaf\'></i><p>KisanSeLo</p></div>'">
                     </div>
                     <div class="project-content">
                         <h3>KisanSeLo</h3>
                         <p>Developed an e-commerce platform connecting farmers directly with consumers, eliminating middlemen to ensure farmers receive maximum value for their organic products while providing consumers with authentic farm-fresh items.</p>
+                </div>
                         <div class="project-tech">
                             <span>React</span>
                             <span>Node.js</span>
                             <span>MongoDB</span>
                             <span>E-commerce</span>
                         </div>
-                        <div class="project-links">
-                            <a href="https://kisanselo.com" target="_blank" class="btn small">Visit Website</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-nav">
-                <button class="carousel-btn prev-btn" aria-label="Previous projects">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="carousel-btn next-btn" aria-label="Next projects">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
-            <div class="carousel-dots" id="carousel-dots">
-                <!-- Dots will be added by JavaScript -->
-            </div>
-        </div>
-    </section>
-
-    <section id="skills" class="skills">
-        <div class="section-header">
-            <h2>Technical Expertise</h2>
-            <div class="underline"></div>
-        </div>
-        
-        <div class="skills-tabs">
-            <div class="tabs-header">
-                <button class="tab-btn active" data-tab="languages">Languages & Frameworks</button>
-                <button class="tab-btn" data-tab="data">Data Engineering</button>
-                <button class="tab-btn" data-tab="ml">Machine Learning</button>
-                <button class="tab-btn" data-tab="tools">Tools & Platforms</button>
-            </div>
-            
-            <div class="tabs-content">
-                <div class="tab-content active" id="languages-content">
-                    <div class="skills-grid">
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fab fa-python"></i></div>
-                            <div class="skill-info">
-                                <h3>Python</h3>
-                                <div class="skill-tags">
-                                    <span class="skill-tag">Expert</span>
-                                    <span class="skill-tag">Data Processing</span>
-                                    <span class="skill-tag">ETL</span>
-                                    <span class="skill-tag">API Development</span>
-                                </div>
-                                <p>Expert-level Python development with extensive experience in data processing, ETL pipelines, and API development</p>
-                            </div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fas fa-code"></i></div>
-                            <div class="skill-info">
-                                <h3>Perl</h3>
-                                <div class="skill-level">
-                                    <div class="level-bar" style="width: 80%"></div>
-                                </div>
-                                <p>Used for web scraping and data processing in conjunction with Apache Server</p>
-                            </div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fas fa-gamepad"></i></div>
-                            <div class="skill-info">
-                                <h3>C#</h3>
-                                <div class="skill-level">
-                                    <div class="level-bar" style="width: 75%"></div>
-                                </div>
-                                <p>Used for Unity development and ML Agents implementation in autonomous vehicle simulations</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="tab-content" id="data-content">
-                    <div class="skills-grid">
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fas fa-database"></i></div>
-                            <div class="skill-info">
-                                <h3>SQL</h3>
-                                <div class="skill-tags">
-                                    <span class="skill-tag">Database Design</span>
-                                    <span class="skill-tag">Complex Queries</span>
-                                    <span class="skill-tag">Data Manipulation</span>
-                                </div>
-                                <p>Proficient in database design, complex queries, and data manipulation for reporting systems</p>
-                            </div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fas fa-search"></i></div>
-                            <div class="skill-info">
-                                <h3>Elasticsearch & Solr</h3>
-                                <div class="skill-level">
-                                    <div class="level-bar" style="width: 85%"></div>
-                                </div>
-                                <p>Experience with NoSQL search engines for efficient data retrieval and analysis</p>
-                            </div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fas fa-server"></i></div>
-                            <div class="skill-info">
-                                <h3>MongoDB</h3>
-                                <div class="skill-level">
-                                    <div class="level-bar" style="width: 80%"></div>
-                                </div>
-                                <p>NoSQL database experience for document-oriented storage and retrieval</p>
-                            </div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fas fa-exchange-alt"></i></div>
-                            <div class="skill-info">
-                                <h3>ETL Processes</h3>
-                                <div class="skill-level">
-                                    <div class="level-bar" style="width: 90%"></div>
-                                </div>
-                                <p>Designed and implemented ETL pipelines for data transformation and loading</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="tab-content" id="ml-content">
-                    <div class="skills-grid">
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fas fa-brain"></i></div>
-                            <div class="skill-info">
-                                <h3>LLM Integration</h3>
-                                <div class="skill-tags">
-                                    <span class="skill-tag">OpenAI</span>
-                                    <span class="skill-tag">Quiz Generation</span>
-                                    <span class="skill-tag">PDF Chatbot</span>
-                                    <span class="skill-tag">FastAPI</span>
-                                </div>
-                                <p>Experience leveraging LLMs for quiz generation and PDF chatbot applications</p>
-                            </div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fas fa-chart-line"></i></div>
-                            <div class="skill-info">
-                                <h3>Data Analysis</h3>
-                                <div class="skill-level">
-                                    <div class="level-bar" style="width: 90%"></div>
-                                </div>
-                                <p>Proficient with Pandas, NumPy, Seaborn, and Matplotlib for data analysis and visualization</p>
-                            </div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fas fa-robot"></i></div>
-                            <div class="skill-info">
-                                <h3>Reinforcement Learning</h3>
-                                <div class="skill-level">
-                                    <div class="level-bar" style="width: 75%"></div>
-                                </div>
-                                <p>Applied reinforcement learning techniques to train autonomous vehicles in Unity</p>
-                            </div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fas fa-fire"></i></div>
-                            <div class="skill-info">
-                                <h3>PyTorch</h3>
-                                <div class="skill-level">
-                                    <div class="level-bar" style="width: 70%"></div>
-                                </div>
-                                <p>Experience with deep learning framework for building and training neural networks</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="tab-content" id="tools-content">
-                    <div class="skills-grid">
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fab fa-aws"></i></div>
-                            <div class="skill-info">
-                                <h3>AWS Services</h3>
-                                <div class="skill-tags">
-                                    <span class="skill-tag">Lambda</span>
-                                    <span class="skill-tag">SQS</span>
-                                    <span class="skill-tag">S3</span>
-                                    <span class="skill-tag">Serverless</span>
-                                </div>
-                                <p>Experience with Lambda, SQS, S3, and Serverless Framework for cloud-based solutions</p>
-                            </div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            <div class="skill-info">
-                                <h3>Dashboards</h3>
-                                <div class="skill-level">
-                                    <div class="level-bar" style="width: 90%"></div>
-                                </div>
-                                <p>Proficient with Kibana and Apache Superset for data visualization and reporting</p>
-                            </div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fas fa-code-branch"></i></div>
-                            <div class="skill-info">
-                                <h3>Git</h3>
-                                <div class="skill-level">
-                                    <div class="level-bar" style="width: 85%"></div>
-                                </div>
-                                <p>Version control for collaborative development and code management</p>
-                            </div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fas fa-stream"></i></div>
-                            <div class="skill-info">
-                                <h3>Message Brokers</h3>
-                                <div class="skill-level">
-                                    <div class="level-bar" style="width: 80%"></div>
-                                </div>
-                                <p>Experience with Redis Queue and AWS SQS for asynchronous processing</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="experience" class="experience">
-        <div class="section-header">
-            <h2>Professional Experience</h2>
-            <div class="underline"></div>
-        </div>
-        <div class="timeline">
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-content">
-                    <div class="timeline-header">
-                        <h3>Data Engineer</h3>
-                        <p class="timeline-company">Knimbus, Delhi</p>
-                        <p class="timeline-date">Dec 2022 - Present</p>
-                    </div>
-                    <p class="timeline-summary">Leading the development of data systems that process millions of records daily for academic and research institutions.</p>
-                    <div class="timeline-details hidden">
-                        <ul class="timeline-achievements">
-                            <li><strong>Impact:</strong> Built an automated reporting system that reduced manual work by 85% and processes large volumes of reports in parallel for multiple clients using Python, Elasticsearch, SQL, and Redis Queue.</li>
-                            <li><strong>Innovation:</strong> Developed a versatile scraping framework that retrieves data from 20+ different sources using Selenium, custom scrapers, and API integrations.</li>
-                            <li><strong>Efficiency:</strong> Created an ETL pipeline that improved data accuracy by 40% while collecting and transforming client usage stats, and integrating data across platforms.</li>
-                            <li><strong>AI Initiative:</strong> Implemented LLM-powered quiz generation and PDF chatbot functionality that increased user engagement by 65% using FastAPI and LLM integrations.</li>
-                        </ul>
-                        <div class="timeline-skills">
-                            <span>Python</span>
-                            <span>Elasticsearch</span>
-                            <span>Redis</span>
-                            <span>AWS</span>
-                            <span>LLMs</span>
-                        </div>
-                    </div>
-                    <button class="view-more-btn">View Details</button>
-                </div>
-            </div>
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-content">
-                    <div class="timeline-header">
-                        <h3>Data Engineer</h3>
-                        <p class="timeline-company">Fliplearn, Gurgaon</p>
-                        <p class="timeline-date">March 2022 - Dec 2022</p>
-                    </div>
-                    <p class="timeline-summary">Built scalable analytics platform for educational data that helped educators track and improve student progress.</p>
-                    <div class="timeline-details hidden">
-                        <ul class="timeline-achievements">
-                            <li><strong>Platform Growth:</strong> Developed a data engine for generating platform usage reports that provided insights to over 300 schools, helping them improve digital adoption.</li>
-                            <li><strong>Technical Excellence:</strong> Implemented a serverless architecture on AWS that reduced infrastructure costs by 40% while improving scalability and reliability.</li>
-                        </ul>
-                        <div class="timeline-skills">
-                            <span>AWS Serverless</span>
-                            <span>Python</span>
-                            <span>SQS</span>
-                            <span>Lambda</span>
-                            <span>MongoDB/SQL</span>
-                        </div>
-                    </div>
-                    <button class="view-more-btn">View Details</button>
-                </div>
-            </div>
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-content">
-                    <div class="timeline-header">
-                        <h3>Internship</h3>
-                        <p class="timeline-company">IIT-Bombay BETIC LAB</p>
-                        <p class="timeline-date">2018 (6 months)</p>
-                    </div>
-                    <p class="timeline-summary">Applied engineering principles to create affordable prosthetics that significantly improved users' quality of life.</p>
-                    <div class="timeline-details hidden">
-                        <ul class="timeline-achievements">
-                            <li><strong>Social Impact:</strong> Contributed to developing and fitting low-cost prosthetic legs that were 70% more affordable than conventional options, making them accessible to underserved communities.</li>
-                            <li><strong>User-Centered Design:</strong> Worked directly with patients to customize prosthetics to individual needs, enhancing mobility and comfort.</li>
-                        </ul>
-                        <div class="timeline-skills">
-                            <span>Mechanical Engineering</span>
-                            <span>Prototyping</span>
-                            <span>CAD</span>
-                            <span>Problem Solving</span>
-                        </div>
-                    </div>
-                    <button class="view-more-btn">View Details</button>
-                </div>
             </div>
         </div>
     </section>
 
     <section id="contact" class="contact">
-        <div class="section-header">
+         <div class="section-header container">
             <h2>Get In Touch</h2>
-            <div class="underline"></div>
         </div>
-        <div class="contact-container">
-            <div class="contact-info">
-                <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.</p>
-                <div class="contact-social">
-                    <a href="https://www.linkedin.com/in/sarang-bhatnagar-3253a5100/" target="_blank" class="social-btn">
-                        <i class="fab fa-linkedin"></i>
-                        <span>Connect on LinkedIn</span>
-                    </a>
-                    <a href="https://github.com/sarang997" target="_blank" class="social-btn">
-                        <i class="fab fa-github"></i>
-                        <span>Follow on GitHub</span>
-                    </a>
-                    <a href="mailto:bhatnagar.sarang1@gmail.com" class="social-btn">
-                        <i class="fas fa-envelope"></i>
-                        <span>Send an Email</span>
-                    </a>
-                </div>
-            </div>
+        <div class="contact-container container">
+            <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision. Feel free to reach out!</p>
+             <a href="mailto:bhatnagar.sarang1@gmail.com" class="contact-button">
+                 <i class="fas fa-envelope"></i> Say Hi!
+             </a>
         </div>
     </section>
 
     <footer>
         <div class="footer-content">
-            <div class="footer-logo">Sarang Bhatnagar</div>
-            <!-- <p>&copy; 2023 All rights reserved.</p> -->
             <div class="footer-social">
-                <a href="https://github.com/sarang997" target="_blank"><i class="fab fa-github"></i></a>
-                <a href="https://www.linkedin.com/in/sarang-bhatnagar-3253a5100/" target="_blank"><i class="fab fa-linkedin"></i></a>
-                <a href="https://www.youtube.com/watch?v=rkrcTk5bTJA&t=2s" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a href="https://github.com/sarang997" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/sarang-bhatnagar-3253a5100/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.youtube.com/watch?v=rkrcTk5bTJA&t=2s" target="_blank" aria-label="YouTube Demo"><i class="fab fa-youtube"></i></a>
+            </div>
+             <div class="footer-credit">
+                 &copy; 2024 Sarang Bhatnagar. Inspired design.
             </div>
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        const tabs = document.querySelectorAll('.company-tab');
+        const contents = document.querySelectorAll('.experience-content');
+        const tabsContainer = document.getElementById('company-tabs');
+        const detailsContainer = document.getElementById('experience-details');
+
+        tabsContainer.addEventListener('click', (event) => {
+            const clickedTab = event.target.closest('.company-tab');
+            if (!clickedTab) return; // Exit if click wasn't on a tab button
+
+            const targetId = clickedTab.dataset.target;
+            const targetContent = document.getElementById(targetId);
+
+            // Remove active class from all tabs and contents
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+
+            // Add active class to the clicked tab and corresponding content
+            clickedTab.classList.add('active');
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
+
+        // --- Canvas Animation --- 
+        const canvas = document.getElementById('hero-canvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray = [];
+        let animationFrameId;
+
+        // Function to set canvas dimensions
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            initParticles(); // Re-initialize particles on resize
+        }
+
+        // Particle class
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5 + 0.5; // Small dots
+                this.speedX = Math.random() * 1 - 0.5; // Slow horizontal speed
+                this.speedY = Math.random() * 1 - 0.5; // Slow vertical speed
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                // Wrap particles around edges
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(226, 232, 240, 0.6)'; // Light gray, slightly transparent
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Initialize particles
+        function initParticles() {
+            particlesArray = [];
+            // Adjust particle count based on screen size (optional)
+            let numberOfParticles = (canvas.width * canvas.height) / 9000;
+            if (numberOfParticles > 150) numberOfParticles = 150; // Max particles
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        // Animation loop
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            // Optional: Draw lines between nearby particles
+            connectParticles();
+            animationFrameId = requestAnimationFrame(animateParticles);
+        }
+
+        // Function to connect particles with lines
+        function connectParticles() {
+            let opacityValue = 1;
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let distance = Math.sqrt(
+                        Math.pow(particlesArray[a].x - particlesArray[b].x, 2) +
+                        Math.pow(particlesArray[a].y - particlesArray[b].y, 2)
+                    );
+
+                    if (distance < 100) { // Max distance to connect
+                        opacityValue = 1 - (distance / 100);
+                        ctx.strokeStyle = `rgba(226, 232, 240, ${opacityValue * 0.3})`; // Faint lines
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Initial setup and start animation
+        resizeCanvas(); // Set initial size
+        animateParticles();
+
+        // Handle window resize
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            cancelAnimationFrame(animationFrameId); // Stop previous animation
+            resizeTimer = setTimeout(() => {
+                resizeCanvas();
+                animateParticles(); // Restart animation with new size
+            }, 250); // Debounce resize event
+        });
+    </script>
 </body>
 </html> 
