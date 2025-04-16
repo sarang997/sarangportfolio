@@ -15,6 +15,19 @@
             --accent-color: #22d3ee; /* Cyan accent */
             --secondary-text-color: #94a3b8; /* Muted text */
             --border-color: #334155;
+
+            /* --- Animation Colors (Copied & Prefixed) --- */
+            --anim-node-idle-color: rgba(100, 116, 139, 0.4); /* Muted slate */
+            --anim-node-busy-color: rgba(34, 211, 238, 0.8); /* Cyan */
+            --anim-line-color: rgba(51, 65, 85, 0.3); /* Darker slate for lines */
+            --anim-particle-color: rgba(203, 213, 225, 0.9); /* Lighter slate */
+            --anim-particle-processing-color: var(--anim-node-busy-color); /* Match busy node */
+            --anim-particle-source-color: rgba(250, 250, 220, 0.85); /* White-yellowish */
+            --anim-particle-processed-color: rgba(150, 255, 170, 0.8); /* Light greenish */
+            --anim-queue-dot-color: rgba(148, 163, 184, 0.7); /* Slate for queue */
+            --anim-container-bg: rgba(30, 41, 59, 0.2); /* Semi-transparent dark bg */
+            /* --container-border: rgba(51, 65, 85, 0.5); -- Not needed */
+            --anim-text-color: rgba(148, 163, 184, 0.8); /* Muted text color */
         }
 
         * {
@@ -633,6 +646,31 @@
             overflow: hidden; /* Prevent canvas overflow if needed */
         }
     </style>
+    <!-- Added Animation CSS -->
+    <style>
+        /* --- Container for the Animation --- */
+        #data-flow-container {
+            /* width: clamp(300px, 60%, 600px); */ /* Adjusted width */
+            width: 90%;
+            max-width: 700px; /* Limit max width */
+            height: 80px; /* Reduced height */
+            position: relative;
+            /* border: 1px solid var(--container-border); */ /* Removed border */
+            border-radius: 4px;
+            margin: 0 auto 2.5rem auto; /* Center and add margin below */
+            display: block; /* Ensure it takes block layout */
+        }
+
+        /* --- Canvas Element --- */
+        #flow-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -657,7 +695,10 @@
     </header>
 
     <section id="hero" class="hero-section">
-        <canvas id="hero-canvas"></canvas>
+        <!-- Added Animation Container -->
+        <div id="data-flow-container">
+            <canvas id="flow-canvas"></canvas>
+        </div>
         <div class="hero-content container">
              <h1>Hi, <span class="highlight">Sarang</span> here.</h1>
              <p class="subtitle">I build things with data.</p>
@@ -899,106 +940,502 @@
             }
         });
 
-        // --- Canvas Animation --- 
-        const canvas = document.getElementById('hero-canvas');
-        const ctx = canvas.getContext('2d');
-        let particlesArray = [];
-        let animationFrameId;
+        // --- Experience Tabs JS (Existing) ---
+        // Keep the existing tabs JS here...
 
-        // Function to set canvas dimensions
-        function resizeCanvas() {
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-            initParticles(); // Re-initialize particles on resize
-        }
+        // --- Added Data Flow Canvas Animation ---
+        const canvas = document.getElementById('flow-canvas');
+        // Check if canvas exists before proceeding
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            const container = document.getElementById('data-flow-container');
 
-        // Particle class
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 1.5 + 0.5; // Small dots
-                this.speedX = Math.random() * 1 - 0.5; // Slow horizontal speed
-                this.speedY = Math.random() * 1 - 0.5; // Slow vertical speed
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
+            // --- State Variables ---
+            let particles = [];
+            let nodes = {
+                source: { x: 0, y: 0 },
+                processors: [], // { x, y, targetY, isBusy, isRemoving, removeProgress, color, id } <= Added ID
+                destination: { x: 0, y: 0 },
+            };
+            let sourceQueueLength = 0;
+            let animationFrameId;
+            let isScaling = false;
+            let lastTimestamp = 0;
+            let frameCount = 0;
+            let nextProcessorId = 0; // To give processors unique IDs
 
-                // Wrap particles around edges
-                if (this.x > canvas.width) this.x = 0;
-                if (this.x < 0) this.x = canvas.width;
-                if (this.y > canvas.height) this.y = 0;
-                if (this.y < 0) this.y = canvas.height;
-            }
-            draw() {
-                ctx.fillStyle = 'rgba(226, 232, 240, 0.6)'; // Light gray, slightly transparent
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
+            // --- Configuration ---
+            const PARTICLE_SIZE = 1.5;
+            const PARTICLE_SPEED = 2.0; // Increased speed
+            const PARTICLE_CREATION_INTERVAL = 15; // Adjusted interval
+            const PARTICLE_PROCESSING_TIME = 120; // Processing time
 
-        // Initialize particles
-        function initParticles() {
-            particlesArray = [];
-            // Adjust particle count based on screen size (optional)
-            let numberOfParticles = (canvas.width * canvas.height) / 9000;
-            if (numberOfParticles > 150) numberOfParticles = 150; // Max particles
-            for (let i = 0; i < numberOfParticles; i++) {
-                particlesArray.push(new Particle());
-            }
-        }
+            const NODE_RADIUS = 4;
+            const NODE_ANIMATION_SPEED = 0.08; // Speed for node position changes
 
-        // Animation loop
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].update();
-                particlesArray[i].draw();
-            }
-            // Optional: Draw lines between nearby particles
-            connectParticles();
-            animationFrameId = requestAnimationFrame(animateParticles);
-        }
+            const SCALING_QUEUE_THRESHOLD = 3; // Queue size to trigger scale-up
+            const SCALING_UTILIZATION_THRESHOLD = 0.3; // Utilization % to trigger scale-down
+            const SCALING_MAX_PROCESSORS = 7; // Max number of processors
+            const SCALING_MIN_PROCESSORS = 2; // Min number of processors
+            const SCALING_CHECK_INTERVAL = 3000; // How often (ms) to check for scale-down
+            const SCALING_COOLDOWN = 600; // Cooldown (ms) between scaling actions
+            const SCALING_REMOVE_DURATION = 500; // Duration (ms) for removal animation
 
-        // Function to connect particles with lines
-        function connectParticles() {
-            let opacityValue = 1;
-            for (let a = 0; a < particlesArray.length; a++) {
-                for (let b = a; b < particlesArray.length; b++) {
-                    let distance = Math.sqrt(
-                        Math.pow(particlesArray[a].x - particlesArray[b].x, 2) +
-                        Math.pow(particlesArray[a].y - particlesArray[b].y, 2)
-                    );
+            const TEXT_FONT = '9px sans-serif';
+            const TEXT_OFFSET_Y = -10; // Pixels above the nodes/area center
 
-                    if (distance < 100) { // Max distance to connect
-                        opacityValue = 1 - (distance / 100);
-                        ctx.strokeStyle = `rgba(226, 232, 240, ${opacityValue * 0.3})`; // Faint lines
-                        ctx.lineWidth = 0.5;
-                        ctx.beginPath();
-                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-                        ctx.stroke();
-                    }
+            // --- Get Colors from CSS Variables ---
+            // Use prefixed variables defined in the main CSS
+            const NODE_IDLE_COLOR = getCssVar('--anim-node-idle-color', 'rgba(100, 116, 139, 0.4)');
+            const NODE_BUSY_COLOR = getCssVar('--anim-node-busy-color', 'rgba(34, 211, 238, 0.8)');
+            const LINE_COLOR = getCssVar('--anim-line-color', 'rgba(51, 65, 85, 0.3)');
+            const PARTICLE_COLOR = getCssVar('--anim-particle-color', 'rgba(203, 213, 225, 0.9)');
+            const PARTICLE_PROCESSING_COLOR = getCssVar('--anim-particle-processing-color', NODE_BUSY_COLOR); // Cyan
+            const PARTICLE_SOURCE_COLOR = getCssVar('--anim-particle-source-color', 'rgba(250, 250, 220, 0.85)'); // Yellowish
+            const PARTICLE_PROCESSED_COLOR = getCssVar('--anim-particle-processed-color', 'rgba(150, 255, 170, 0.8)'); // Greenish
+            const QUEUE_DOT_COLOR = getCssVar('--anim-queue-dot-color', 'rgba(148, 163, 184, 0.7)');
+            const TEXT_COLOR = getCssVar('--anim-text-color', 'rgba(148, 163, 184, 0.8)');
+
+            function getCssVar(varName, fallback) {
+                try { // Add try-catch for safety if run outside browser context briefly
+                    const value = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+                    return value || fallback;
+                } catch (e) {
+                    return fallback;
                 }
             }
-        }
 
-        // Initial setup and start animation
-        resizeCanvas(); // Set initial size
-        animateParticles();
+             // --- Classes ---
+            class Particle {
+                 constructor(targetProcessorIndex) {
+                    // Start directly at the source node
+                   this.x = nodes.source.x;
+                    this.y = nodes.source.y; // Start at same height
+                    this.size = PARTICLE_SIZE;
+                    this.speed = PARTICLE_SPEED;
+                    this.color = PARTICLE_SOURCE_COLOR; // Start with source color
 
-        // Handle window resize
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            cancelAnimationFrame(animationFrameId); // Stop previous animation
-            resizeTimer = setTimeout(() => {
-                resizeCanvas();
-                animateParticles(); // Restart animation with new size
-            }, 250); // Debounce resize event
-        });
+                    this.state = 'moving_to_processor';
+                    this.targetProcessorIndex = targetProcessorIndex; // Store index
+                    this.targetProcessorId = nodes.processors[targetProcessorIndex]?.id; // Store ID for robustness
+                    this.targetCoords = nodes.processors[targetProcessorIndex]; // Initial reference
+                    this.processingTimer = PARTICLE_PROCESSING_TIME;
+
+                    this.vx = 0;
+                    this.vy = 0;
+                    this.calculateVelocity(this.targetCoords);
+                }
+
+                getTargetProcessor() {
+                    // Find processor by ID, more robust than index if array shifts during removal
+                    return nodes.processors.find(p => p.id === this.targetProcessorId);
+                }
+
+                calculateVelocity(target) {
+                    if (!target) return;
+                    const dx = target.x - this.x;
+                    const dy = target.y - this.y;
+                    const distance = Math.hypot(dx, dy);
+                    if (distance > 0.1) {
+                        this.vx = (dx / distance) * this.speed;
+                        this.vy = (dy / distance) * this.speed;
+                    } else {
+                        this.vx = 0;
+                        this.vy = 0;
+                    }
+                }
+
+                update() {
+                    this.targetCoords = this.getTargetProcessor(); // Update reference each frame
+
+                    if (!this.targetCoords || this.targetCoords.isRemoving) {
+                        this.state = 'finished'; // Target gone or removing
+                        return;
+                    }
+
+                    if (this.state === 'moving_to_processor') {
+                        this.calculateVelocity(this.targetCoords);
+                        this.x += this.vx;
+                        this.y += this.vy;
+                        const distToTarget = Math.hypot(this.targetCoords.x - this.x, this.targetCoords.y - this.y);
+
+                        if (distToTarget < this.speed * 1.5) {
+                            this.state = 'at_processor';
+                            this.x = this.targetCoords.x;
+                            this.y = this.targetCoords.y;
+                            this.color = PARTICLE_PROCESSING_COLOR; // Change to processing color
+                            this.processingTimer = PARTICLE_PROCESSING_TIME;
+                            this.targetCoords.isBusy = true;
+                            this.targetCoords.color = NODE_BUSY_COLOR;
+                        }
+                    } else if (this.state === 'at_processor') {
+                        this.x = this.targetCoords.x;
+                        this.y = this.targetCoords.y;
+                        this.processingTimer--;
+
+                        if (this.processingTimer <= 0) {
+                            const processor = this.targetCoords; // Already have reference
+
+                            this.state = 'moving_to_destination';
+                            this.color = PARTICLE_PROCESSED_COLOR; // Change to processed color
+                            this.calculateVelocity(nodes.destination);
+
+                            // Check queue BEFORE freeing processor
+                            if (sourceQueueLength > 0 && !processor.isRemoving) {
+                                sourceQueueLength--;
+                                // Find original index for the *new* particle (less robust but needed for constructor)
+                                const originalIndex = nodes.processors.findIndex(p => p.id === processor.id);
+                                if (originalIndex !== -1) {
+                                    particles.push(new Particle(originalIndex));
+                                    processor.isBusy = true; // Stays busy
+                                    processor.color = NODE_BUSY_COLOR;
+                                } else { // Processor somehow removed between check and now? Unlikely.
+                                    processor.isBusy = false;
+                                    processor.color = NODE_IDLE_COLOR;
+                                }
+                            } else if (!processor.isRemoving) {
+                                processor.isBusy = false;
+                                processor.color = NODE_IDLE_COLOR;
+                            }
+                        }
+                    } else if (this.state === 'moving_to_destination') {
+                        this.x += this.vx;
+                        this.y += this.vy;
+                        const distToDest = Math.hypot(nodes.destination.x - this.x, nodes.destination.y - this.y);
+                        if (distToDest < this.speed * 1.5 || this.x > canvas.width + 20 || this.x < -20 || this.y > canvas.height + 20 || this.y < -20) {
+                            this.state = 'finished';
+                        }
+                    }
+                }
+
+                draw() {
+                    // Draw as an arrow pointing in the direction of velocity
+                    const angle = Math.atan2(this.vy, this.vx);
+                    const arrowSize = this.size * 3.5; // Increased arrow size multiplier
+
+                    ctx.save(); // Save current state
+                    ctx.translate(this.x, this.y); // Move origin to particle position
+                    ctx.rotate(angle); // Rotate coordinate system
+
+                    ctx.fillStyle = this.color; 
+                     ctx.beginPath();
+                    // Draw triangle (arrow shape)
+                    ctx.moveTo(arrowSize, 0); // Tip of the arrow
+                    ctx.lineTo(-arrowSize / 2, -arrowSize / 2.5);
+                    ctx.lineTo(-arrowSize / 2, arrowSize / 2.5);
+                    ctx.closePath();
+                     ctx.fill();
+
+                    ctx.restore(); // Restore original state (translation, rotation)
+                }
+            }
+
+            // --- Core Functions ---
+
+            function resizeCanvas() {
+                 if (!canvas || !container) return; // Add checks
+                 const oldWidth = canvas.width;
+                 canvas.width = container.offsetWidth;
+                 canvas.height = container.offsetHeight;
+                 // If width changed significantly, reset completely, otherwise just recalculate layout
+                 if (Math.abs(oldWidth - canvas.width) > 10 && oldWidth > 0) {
+                    console.log("Significant resize, resetting animation.");
+                    setupNodes(SCALING_MIN_PROCESSORS); // Reset to min processors
+                    particles = [];
+                    sourceQueueLength = 0;
+                 } else {
+                    setupNodes(nodes.processors.length || SCALING_MIN_PROCESSORS);
+                 }
+            }
+
+            function calculateProcessorTargetPositions(processorCount) {
+                const w = canvas.width;
+                const h = canvas.height;
+                const processorX = w * 0.5; // Keep centered horizontally
+                const availableHeight = h * 0.65; // Reduced vertical spread
+                const topPadding = h * 0.175;    // Adjusted top padding
+                const verticalSpacing = processorCount > 1 ? availableHeight / (processorCount - 1) : availableHeight / 2;
+                let positions = [];
+                for (let i = 0; i < processorCount; i++) {
+                    let yPos = (processorCount === 1) ? topPadding + availableHeight / 2 : topPadding + verticalSpacing * i;
+                    positions.push({ x: processorX, y: yPos });
+                }
+                return positions;
+            }
+
+            function setupNodes(processorCount) {
+                const w = canvas.width;
+                const h = canvas.height;
+                // Adjust Source/Dest X positions to be closer
+                nodes.source = { x: w * 0.15, y: h * 0.5 };
+                nodes.destination = { x: w * 0.85, y: h * 0.5 };
+
+                const targetPositions = calculateProcessorTargetPositions(processorCount);
+
+                // Preserve existing IDs and state where possible
+                const existingProcessors = nodes.processors;
+                const newProcessors = [];
+
+                for (let i = 0; i < processorCount; i++) {
+                    // Try to find a non-removing, non-setup processor to reuse
+                    const existing = existingProcessors.find(p => !p.markedForSetup && !p.isRemoving && p.id !== undefined);
+                    if (existing) {
+                        existing.markedForSetup = true; // Mark as used for this setup cycle
+                        existing.targetY = targetPositions[i].y; // Update target Y
+                        existing.x = targetPositions[i].x; // Update X (though it should be constant)
+                         // Snap Y on setup/resize for immediate adjustment
+                         existing.y = targetPositions[i].y;
+                        newProcessors.push(existing);
+                    } else {
+                        // Add new processor if no suitable existing one or if expanding
+                        newProcessors.push({
+                            id: nextProcessorId++,
+                            x: targetPositions[i].x,
+                            y: targetPositions[i].y, // Start at target position
+                            targetY: targetPositions[i].y,
+                            isBusy: false,
+                            isRemoving: false,
+                            removeProgress: 0,
+                            color: NODE_IDLE_COLOR
+                        });
+                    }
+                }
+                // Clean up marker property
+                newProcessors.forEach(p => delete p.markedForSetup);
+                nodes.processors = newProcessors; // Replace processor array
+
+                // If processorCount < existing count during resize, mark excess for removal (handle later)
+                 if (processorCount < existingProcessors.length) {
+                     // Logic to mark excess processors for removal can be added here if needed during resize
+                 }
+            }
+
+
+            // --- Scaling Functions ---
+
+            function startScaleUp() {
+                if (isScaling || nodes.processors.length >= SCALING_MAX_PROCESSORS) return;
+                console.log("Attempting scale up...");
+                isScaling = true;
+
+                const newProcessorCount = nodes.processors.length + 1;
+                const targetPositions = calculateProcessorTargetPositions(newProcessorCount);
+
+                // Update target positions for existing nodes
+                nodes.processors.forEach((p, i) => {
+                    p.targetY = targetPositions[i].y;
+                    p.x = targetPositions[i].x; // Keep X aligned
+                });
+
+                // Add the new processor
+                const newProcessorIndex = newProcessorCount - 1;
+                nodes.processors.push({
+                    id: nextProcessorId++, // Assign unique ID
+                    x: targetPositions[newProcessorIndex].x,
+                    y: targetPositions[newProcessorIndex].y, // Start at target Y
+                    targetY: targetPositions[newProcessorIndex].y,
+                    isBusy: false,
+                    isRemoving: false,
+                    removeProgress: 0,
+                    color: NODE_IDLE_COLOR
+                });
+                console.log("Scaled up to", newProcessorCount);
+                setTimeout(() => { isScaling = false; }, SCALING_COOLDOWN);
+            }
+
+            function startScaleDown() {
+                if (isScaling || nodes.processors.length <= SCALING_MIN_PROCESSORS) return;
+
+                // Find an IDLE processor to remove
+                let processorToRemove = nodes.processors.find(p => !p.isBusy && !p.isRemoving);
+
+                if (!processorToRemove) {
+                    console.log("Scale down check: No idle processor found.");
+                    return; // No idle processor
+                }
+                console.log("Attempting scale down, removing processor ID:", processorToRemove.id);
+                isScaling = true;
+                processorToRemove.isRemoving = true;
+                processorToRemove.removeProgress = 0;
+
+                // Calculate target positions for remaining processors
+                const remainingProcessors = nodes.processors.filter(p => !p.isRemoving); // Filter based on current removal flags
+                const targetPositions = calculateProcessorTargetPositions(remainingProcessors.length);
+
+                // Update target positions for the ones that will remain
+                remainingProcessors.forEach((p, i) => {
+                    p.targetY = targetPositions[i].y;
+                    p.x = targetPositions[i].x; // Keep X aligned
+                });
+
+                 // Use timeout for the removal animation duration
+                setTimeout(() => {
+                    finishScaleDown(processorToRemove.id); // Pass ID for removal
+                }, SCALING_REMOVE_DURATION);
+            }
+
+            function finishScaleDown(removedId) {
+                nodes.processors = nodes.processors.filter(p => p.id !== removedId); // Remove by ID
+                console.log("Finished scale down, remaining:", nodes.processors.length);
+                isScaling = false;
+            }
+
+            // --- Check Scale Down Conditions (Interval) ---
+            let scaleDownIntervalId = null; // Store interval ID
+            function checkScaleDownConditions() {
+                if (isScaling || nodes.processors.length <= SCALING_MIN_PROCESSORS || sourceQueueLength > 0) return;
+                const busyCount = nodes.processors.filter(p => p.isBusy).length;
+                const totalCount = nodes.processors.length;
+                const utilization = totalCount > 0 ? busyCount / totalCount : 0;
+                // console.log(`Scale down check: Util=${utilization.toFixed(2)}, Queue=${sourceQueueLength}, Total=${totalCount}`);
+                if (utilization < SCALING_UTILIZATION_THRESHOLD) {
+                    startScaleDown();
+                }
+            }
+
+            // --- Drawing Functions ---
+
+            function drawNodesAndLines(deltaTime) {
+                // Animate node positions towards targetY and handle removal progress
+                nodes.processors.forEach(p => {
+                    if (Math.abs(p.y - p.targetY) > 0.1) {
+                        p.y += (p.targetY - p.y) * NODE_ANIMATION_SPEED;
+                    } else {
+                        p.y = p.targetY;
+                    }
+                    if (p.isRemoving) {
+                        // Convert ms deltaTime to fraction of remove duration
+                        p.removeProgress = Math.min(1, p.removeProgress + (deltaTime / SCALING_REMOVE_DURATION));
+                    }
+                });
+
+                // Draw Lines (Fade out lines for removing nodes)
+                ctx.strokeStyle = LINE_COLOR;
+                ctx.lineWidth = 0.5;
+                nodes.processors.forEach(p => {
+                    const alpha = Math.max(0, (1.0 - p.removeProgress) * 0.5); // Use removeProgress for alpha
+                    if (alpha > 0.01) { // Only draw if somewhat visible
+                        ctx.globalAlpha = alpha;
+                        ctx.beginPath();
+                        ctx.moveTo(nodes.source.x, nodes.source.y);
+                        ctx.lineTo(p.x, p.y); // Use current animated y
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y); // Use current animated y
+                        ctx.lineTo(nodes.destination.x, nodes.destination.y);
+                        ctx.stroke();
+                    }
+                });
+                ctx.globalAlpha = 1.0; // Reset global alpha
+
+                // Draw Processor Nodes (Scale down and fade out removing nodes)
+                nodes.processors.forEach(p => {
+                    const radius = NODE_RADIUS * (1.0 - p.removeProgress); // Scale radius based on removal
+                    if (radius > 0.1) {
+                        ctx.fillStyle = p.color;
+                        ctx.globalAlpha = 1.0 - p.removeProgress; // Fade based on removal
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, radius, 0, Math.PI * 2); // Use current animated y
+                        ctx.fill();
+                    }
+                });
+                 ctx.globalAlpha = 1.0; // Reset global alpha
+
+                // Draw Source & Destination Nodes
+                ctx.fillStyle = NODE_IDLE_COLOR;
+                ctx.beginPath();
+                ctx.arc(nodes.source.x, nodes.source.y, NODE_RADIUS, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(nodes.destination.x, nodes.destination.y, NODE_RADIUS, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // --- Main Animation Loop ---
+            function animate(timestamp) {
+                // Ensure timestamp is valid and calculate deltaTime
+                if (!lastTimestamp) lastTimestamp = timestamp;
+                const deltaTime = timestamp - lastTimestamp;
+                lastTimestamp = timestamp;
+
+                // Skip frame if delta is too large (e.g., tab was inactive) or invalid
+                if (!deltaTime || deltaTime > 200) {
+                    animationFrameId = requestAnimationFrame(animate);
+                    return;
+                }
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Particle Creation Logic
+                frameCount++;
+                if (frameCount >= PARTICLE_CREATION_INTERVAL) {
+                    frameCount = 0;
+                    const freeProcessors = nodes.processors.filter(p => !p.isBusy && !p.isRemoving);
+
+                    if (freeProcessors.length > 0) {
+                        // Dispatch particle if processors available
+                        const targetProcessor = freeProcessors[Math.floor(Math.random() * freeProcessors.length)];
+                        // Find original index using the stable ID
+                        const originalIndex = nodes.processors.findIndex(p => p.id === targetProcessor.id);
+                        if(originalIndex !== -1){ // Ensure processor wasn't removed race condition
+                            particles.push(new Particle(originalIndex));
+                        }
+                    } else if (nodes.processors.length > 0) {
+                         // Queue if all processors are busy or being removed
+                        sourceQueueLength++;
+                    }
+                }
+
+                // Check Scale Up Condition
+                if (!isScaling && sourceQueueLength >= SCALING_QUEUE_THRESHOLD && nodes.processors.length < SCALING_MAX_PROCESSORS) {
+                    startScaleUp();
+                }
+
+                // Update & Draw Nodes/Lines (Pass deltaTime for animations)
+                drawNodesAndLines(deltaTime);
+
+                // Update & Draw Particles
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    particles[i].update(); // Update logic includes state checks
+                    if (particles[i].state === 'finished') {
+                        particles.splice(i, 1); // Remove finished particles
+                    } else {
+                        particles[i].draw(); // Draw active particles
+                    }
+                }
+
+                animationFrameId = requestAnimationFrame(animate);
+            }
+
+            // --- Initialization and Resize Handling ---
+            function initialize() {
+                if (!canvas) {
+                    console.error("Canvas element not found for animation.");
+                    return;
+                }
+                 // Assign initial IDs to processors during setup
+                 nextProcessorId = 0; // Reset ID counter
+                 resizeCanvas(); // Initial setup of canvas size and nodes
+                 lastTimestamp = performance.now(); // Set initial timestamp
+                 if (animationFrameId) cancelAnimationFrame(animationFrameId); // Cancel previous frame if any
+                 animate(lastTimestamp); // Start the animation loop
+
+                 // Start the interval checker for scaling down
+                 if (scaleDownIntervalId) clearInterval(scaleDownIntervalId); // Clear previous interval if exists
+                 scaleDownIntervalId = setInterval(checkScaleDownConditions, SCALING_CHECK_INTERVAL);
+            }
+
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                 clearTimeout(resizeTimer);
+                 // Debounce resize events
+                 resizeTimer = setTimeout(resizeCanvas, 250);
+            });
+
+            // --- Start the animation ---
+            initialize();
+        } // End of check for canvas existence
+
     </script>
 </body>
 </html> 
